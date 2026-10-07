@@ -2,7 +2,7 @@ import RegisterForm from "@/components/auth/RegisterForm";
 
 const RegisterPage = () => {
   return (
-    <div>
+    <div className="mx-auto">
       <RegisterForm />
     </div>
   );
