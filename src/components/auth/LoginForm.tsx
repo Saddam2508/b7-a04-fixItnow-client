@@ -12,12 +12,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormEvent } from "react";
+import { IUser } from "../user/userTypes";
+import { loginUser } from "@/lib/actions/user";
 
 const LoginForm = () => {
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(formData.get("email"));
+    const email = formData.get("email");
+    if (typeof email !== "string") {
+      throw new Error("Email is required");
+    }
+    const password = formData.get("password");
+    if (typeof password !== "string") {
+      throw new Error("Password is required");
+    }
+
+    const user: IUser = {
+      email,
+      password,
+    };
+    const result = await loginUser(user);
+    console.log(result);
   };
 
   return (

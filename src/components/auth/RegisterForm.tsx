@@ -12,13 +12,35 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { registerUser } from "@/lib/actions/user";
 import { FormEvent } from "react";
+import { IUser } from "../user/userTypes";
 
 const RegisterForm = () => {
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(formData.get("email"));
+    const name = formData.get("name");
+    if (typeof name !== "string") {
+      throw new Error("Name is required");
+    }
+    const email = formData.get("email");
+    if (typeof email !== "string") {
+      throw new Error("Email is required");
+    }
+    const password = formData.get("password");
+    if (typeof password !== "string") {
+      throw new Error("Password is required");
+    }
+
+    const user: IUser = {
+      name,
+      email,
+      password,
+    };
+
+    const result = await registerUser(user);
+    console.log(result);
   };
 
   return (

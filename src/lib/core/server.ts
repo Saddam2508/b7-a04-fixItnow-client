@@ -3,6 +3,8 @@ import { getUserToken } from "./session";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
+console.log("baseUrl",process.env.NEXT_PUBLIC_BASE_URL )
+
 type Path = string;
 type Data = unknown;
 
