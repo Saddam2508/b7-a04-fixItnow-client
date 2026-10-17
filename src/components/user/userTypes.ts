@@ -8,3 +8,18 @@ export interface IUser {
   role?: Role;
   hourlyRate?: number;
 }
+
+export type LoginState = {
+  success: boolean;
+  message: string;
+};
+
+export type LoginResult = {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};

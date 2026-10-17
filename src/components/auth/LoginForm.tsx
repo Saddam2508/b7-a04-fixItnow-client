@@ -11,30 +11,37 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FormEvent } from "react";
-import { IUser } from "../user/userTypes";
+import { useActionState, useEffect } from "react";
+import { LoginResult } from "../user/userTypes";
 import { loginUser } from "@/lib/actions/user";
+import { useRouter } from "next/navigation";
+import { toast } from "../ui/toast";
+
+const initialState: LoginResult = {
+  success: false,
+  statusCode: 0,
+  message: "",
+  data: {
+    accessToken: "",
+    refreshToken: "",
+  },
+};
 
 const LoginForm = () => {
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email");
-    if (typeof email !== "string") {
-      throw new Error("Email is required");
-    }
-    const password = formData.get("password");
-    if (typeof password !== "string") {
-      throw new Error("Password is required");
+  const [state, formAction, pending] = useActionState(loginUser, initialState);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!state) return;
+    if (state.success) {
+      toast.add({ title: state.message || "login success" });
+      router.push("/dashboard");
     }
 
-    const user: IUser = {
-      email,
-      password,
-    };
-    const result = await loginUser(user);
-    console.log(result);
-  };
+    if (!state.success) {
+      toast.add({ title: state.message || "login failed" });
+    }
+  }, [state]);
 
   return (
     <Card className="w-full min-w-sm">
@@ -48,7 +55,7 @@ const LoginForm = () => {
         </CardAction>
       </CardHeader>
       <CardContent>
-        <form onSubmit={onSubmit}>
+        <form action={formAction}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
