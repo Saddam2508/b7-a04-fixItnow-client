@@ -18,46 +18,53 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { navLinks } from "./navLinkTypes";
+import { getUserSession } from "@/lib/core/session";
+import type { navLinks } from "./navLinkTypes";
 
 export async function DashboardSidebar() {
+  const user = await getUserSession();
+
   const customerNavLinks: navLinks[] = [
-    { icon: House, href: "/dashboard/client", label: "Dashboard" },
+    { icon: House, href: "/dashboard/customer", label: "Dashboard" },
     {
       icon: Bell,
-      href: "/dashboard/client/tasks/post-tasks",
+      href: "/dashboard/customer/tasks/post-tasks",
       label: "Post a Task",
     },
-    { icon: Briefcase, href: "/dashboard/client/tasks", label: "My Tasks" },
-    { icon: FileText, href: "/dashboard/client/proposals", label: "Proposals" },
-    { icon: Person, href: "/dashboard/client/profile", label: "Profile" },
+    { icon: Briefcase, href: "/dashboard/customer/tasks", label: "My Tasks" },
+    {
+      icon: FileText,
+      href: "/dashboard/customer/proposals",
+      label: "Proposals",
+    },
+    { icon: Person, href: "/dashboard/customer/profile", label: "Profile" },
   ];
 
   const technicianNavLinks: navLinks[] = [
-    { icon: House, href: "/dashboard/freelancer", label: "Dashboard" },
+    { icon: House, href: "/dashboard/technician", label: "Dashboard" },
     {
       icon: Magnifier,
-      href: "/dashboard/freelancer/browse-tasks",
+      href: "/dashboard/technician/browse-tasks",
       label: "Browse Tasks",
     },
     {
       icon: FileText,
-      href: "/dashboard/freelancer/proposals",
+      href: "/dashboard/technician/proposals",
       label: "My Proposals",
     },
     {
       icon: Briefcase,
-      href: "/dashboard/freelancer/projects",
+      href: "/dashboard/technician/projects",
       label: "Active Projects",
     },
     {
       icon: CreditCard,
-      href: "/dashboard/freelancer/earnings",
+      href: "/dashboard/technician/earnings",
       label: "Earnings",
     },
     {
       icon: Person,
-      href: "/dashboard/freelancer/profile",
+      href: "/dashboard/technician/profile",
       label: "Edit Profile",
     },
   ];
@@ -79,20 +86,27 @@ export async function DashboardSidebar() {
     admin: adminNavLinks,
   };
 
-  const navItems = navLinksMap[user?.role || "customer"];
+  const navItems =
+    user?.role && user.role in navLinksMap
+      ? navLinksMap[user.role as keyof typeof navLinksMap]
+      : [];
 
   const navContent = (
     <nav className="flex flex-col gap-1">
-      {navItems.map((item) => (
-        <Link
-          key={item.label}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
-          href={item.href}
-        >
-          <item.icon className="size-5 text-muted" />
-          {item.label}
-        </Link>
-      ))}
+      {navItems.map((item) => {
+        const Icon = item.icon;
+
+        return (
+          <Link
+            key={item.href}
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
+            href={item.href}
+          >
+            <Icon className="size-5 text-muted" />
+            {item.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 
@@ -101,35 +115,23 @@ export async function DashboardSidebar() {
       <aside className="hidden w-64 shrink-0 border-r border-default p-4 lg:block">
         {navContent}
       </aside>
+
       <Sheet>
-        <SheetTrigger>
-          <Button className="lg:hidden" variant="secondary">
-            <PanelLeft />
-            Sidebar
-          </Button>
-        </SheetTrigger>
+        <SheetTrigger
+          render={
+            <Button className="lg:hidden" variant="secondary">
+              <PanelLeft />
+              Sidebar
+            </Button>
+          }
+        />
 
         <SheetContent side="left">
           <SheetHeader>
             <SheetTitle>Navigation</SheetTitle>
           </SheetHeader>
 
-          <div className="px-4">
-            {/* এখানে তোমার navContent বসবে */}
-            <nav>
-              <ul className="space-y-2">
-                <li>
-                  <a href="/dashboard">Dashboard</a>
-                </li>
-                <li>
-                  <a href="/profile">Profile</a>
-                </li>
-                <li>
-                  <a href="/settings">Settings</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          <div className="px-4">{navContent}</div>
         </SheetContent>
       </Sheet>
     </>

@@ -1,6 +1,7 @@
-export type Role = "admin" | "user";
+export type Role = "admin" | "customer" | "technician";
 
 export interface IUser {
+  id?: string;
   name?: string;
   email: string;
   password: string;
@@ -8,6 +9,8 @@ export interface IUser {
   role?: Role;
   hourlyRate?: number;
 }
+
+export type IUserSession = Omit<IUser, "password">;
 
 export type LoginState = {
   success: boolean;
