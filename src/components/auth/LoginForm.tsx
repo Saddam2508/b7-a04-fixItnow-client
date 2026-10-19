@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label";
 import { useActionState, useEffect } from "react";
 import { LoginResult } from "../user/userTypes";
 import { loginUser } from "@/lib/actions/user";
-import { useRouter } from "next/navigation";
 import { toast } from "../ui/toast";
 
 const initialState: LoginResult = {
@@ -28,14 +27,13 @@ const initialState: LoginResult = {
 };
 
 const LoginForm = () => {
-  const [state, formAction, pending] = useActionState(loginUser, initialState);
-  const router = useRouter();
+  const [state, formAction, pending] = useActionState(loginUser, false);
 
   useEffect(() => {
     if (!state) return;
+    console.log("state", state);
     if (state.success) {
       toast.add({ title: state.message || "login success" });
-      router.push("/dashboard");
     }
 
     if (!state.success) {

@@ -3,8 +3,13 @@ import { redirect } from "next/navigation";
 import type { IUserSession, Role } from "@/components/user/userTypes";
 import { protectedFetch } from "./server";
 
+const isRole = (role: string): role is Role => {
+  return ["customer", "technician", "admin"].includes(role);
+};
+
 export const getUserToken = async (): Promise<string | null> => {
   const cookieStore = await cookies();
+
   return cookieStore.get("accessToken")?.value ?? null;
 };
 
@@ -21,7 +26,13 @@ export const getUserSession = async (): Promise<IUserSession | null> => {
     return null;
   }
 
-  const user = result.data;
+  const data = result.data;
+
+  if (typeof data !== "object" || data === null || !("profile" in data)) {
+    return null;
+  }
+
+  const user = data.profile;
 
   if (
     typeof user !== "object" ||
@@ -36,10 +47,16 @@ export const getUserSession = async (): Promise<IUserSession | null> => {
     return null;
   }
 
+  const normalizedRole = user.role.toLowerCase();
+
+  if (!isRole(normalizedRole)) {
+    return null;
+  }
+
   return {
     id: user.id,
     email: user.email,
-    role: user.role as Role,
+    role: normalizedRole,
   };
 };
 
