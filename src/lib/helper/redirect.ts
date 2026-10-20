@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { redirect } from "next/navigation";
 import type { Role } from "@/components/user/userTypes";
 
 const ROLE_ROUTES: Record<Role, string> = {
@@ -7,8 +7,6 @@ const ROLE_ROUTES: Record<Role, string> = {
   admin: "/dashboard/admin",
 };
 
-export const redirectByRole = (role: Role, origin: string) => {
-  const route = ROLE_ROUTES[role] ?? "/unauthorized";
-
-  return NextResponse.redirect(new URL(route, origin));
+export const redirectByRole = (role: Role): never => {
+  redirect(ROLE_ROUTES[role] ?? "/unauthorized");
 };
