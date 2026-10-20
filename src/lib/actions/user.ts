@@ -2,8 +2,9 @@
 
 import { IUser, LoginResult } from "@/components/user/userTypes";
 import { serverMutation } from "../core/server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { setAuthCookies } from "../helper/cookies";
+import { getUserRole2 } from "../helper/jwt";
+import { redirectByRole } from "../helper/redirect";
 
 export const registerUser = async (newUser: IUser) => {
   return serverMutation("/api/auth/register", newUser);
@@ -28,52 +29,22 @@ export const loginUser = async (
     };
   }
 
-  const user: IUser = { email, password };
-
-  const result = await serverMutation("/api/auth/login", user);
+  const result = await serverMutation("/api/auth/login", {
+    email: email.trim(),
+    password,
+  });
 
   if (!result?.success || !result.data?.accessToken) {
     return result;
   }
 
-  const cookieStore = await cookies();
+  const { accessToken, refreshToken } = result.data;
 
-  cookieStore.set("accessToken", result.data.accessToken, {
-    httpOnly: true,
-    maxAge: 60 * 60 * 24,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  });
+  await setAuthCookies(accessToken, refreshToken);
 
-  cookieStore.set("refreshToken", result.data.refreshToken, {
-    httpOnly: true,
-    maxAge: 60 * 60 * 24 * 7,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  });
+  const role = getUserRole2(accessToken);
 
-  const payload = result.data.accessToken.split(".")[1];
-
-  if (!payload) {
-    return {
-      ...result,
-      success: false,
-      message: "Invalid access token",
-    };
-  }
-
-  const decodedPayload: unknown = JSON.parse(
-    Buffer.from(payload, "base64url").toString("utf8"),
-  );
-
-  if (
-    typeof decodedPayload !== "object" ||
-    decodedPayload === null ||
-    !("role" in decodedPayload) ||
-    typeof decodedPayload.role !== "string"
-  ) {
+  if (!role) {
     return {
       ...result,
       success: false,
@@ -81,19 +52,5 @@ export const loginUser = async (
     };
   }
 
-  const role = decodedPayload.role.toLowerCase();
-
-  switch (role) {
-    case "customer":
-      redirect("/dashboard/customer");
-
-    case "technician":
-      redirect("/dashboard/technician");
-
-    case "admin":
-      redirect("/dashboard/admin");
-
-    default:
-      redirect("/unauthorized");
-  }
+  redirectByRole(role);
 };
