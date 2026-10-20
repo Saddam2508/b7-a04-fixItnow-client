@@ -12,26 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState, useEffect } from "react";
-import { LoginResult } from "../user/userTypes";
 import { loginUser } from "@/lib/actions/user";
 import { toast } from "../ui/toast";
-
-const initialState: LoginResult = {
-  success: false,
-  statusCode: 0,
-  message: "",
-  data: {
-    accessToken: "",
-    refreshToken: "",
-  },
-};
 
 const LoginForm = () => {
   const [state, formAction, pending] = useActionState(loginUser, false);
 
   useEffect(() => {
     if (!state) return;
-    console.log("state", state);
     if (state.success) {
       toast.add({ title: state.message || "login success" });
     }
@@ -78,7 +66,7 @@ const LoginForm = () => {
               <Input id="password" name="password" type="password" required />
             </div>
             <Button type="submit" className="w-full">
-              Login
+              {pending ? "loading" : "Login"}
             </Button>
           </div>
         </form>
