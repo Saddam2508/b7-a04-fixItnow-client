@@ -1,3 +1,4 @@
+import { Role } from "@/components/user/userTypes";
 import { decodeJwt } from "jose";
 
 interface JWTPayload {
@@ -30,15 +31,20 @@ export const getUserRole1 = (accessToken: string): string | null => {
   return payload.role.toLowerCase();
 };
 
-export const getUserRole2 = (accessToken: string): string | null => {
-  try {
-    const payload = decodeJwt(accessToken);
+const ROLES: readonly Role[] = ["customer", "technician", "admin"];
 
-    if (typeof payload.role !== "string") {
+export const getUserRole2 = (token: string): Role | null => {
+  try {
+    const payload = decodeJwt(token);
+    const role = payload.role;
+
+    if (typeof role !== "string") {
       return null;
     }
 
-    return payload.role.toLowerCase();
+    const normalizedRole = role.toLowerCase();
+
+    return ROLES.find((item) => item === normalizedRole) ?? null;
   } catch {
     return null;
   }
