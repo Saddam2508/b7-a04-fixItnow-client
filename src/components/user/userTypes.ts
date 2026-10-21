@@ -8,6 +8,7 @@ export interface IUser {
   mobile?: number;
   role?: Role;
   hourlyRate?: number;
+  image: string;
 }
 
 export type IUserSession = Omit<IUser, "password">;

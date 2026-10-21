@@ -30,7 +30,7 @@ const LoginForm = () => {
   }, [state]);
 
   return (
-    <Card className="w-full min-w-sm">
+    <Card className="w-full max-w-sm mx-auto">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>

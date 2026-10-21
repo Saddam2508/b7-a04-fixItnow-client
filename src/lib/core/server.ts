@@ -3,8 +3,6 @@ import { getUserToken } from "./session";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-console.log("baseUrl",process.env.NEXT_PUBLIC_BASE_URL )
-
 type Path = string;
 type Data = unknown;
 
@@ -26,6 +24,7 @@ export const serverFetch = async (path: Path) => {
 export const protectedFetch = async (path: Path) => {
   const res = await fetch(`${baseUrl}${path}`, {
     headers: await authHeader(),
+    cache: "no-store",
   });
 
   // handle 401, 403

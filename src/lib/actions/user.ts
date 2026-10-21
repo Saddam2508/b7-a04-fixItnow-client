@@ -2,9 +2,11 @@
 
 import { IUser, LoginResult } from "@/components/user/userTypes";
 import { serverMutation } from "../core/server";
-import { setAuthCookies } from "../helper/cookies";
+import { clearAuthCookies, setAuthCookies } from "../helper/cookies";
 import { getUserRole2 } from "../helper/jwt";
 import { redirectByRole } from "../helper/redirect";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export const registerUser = async (newUser: IUser) => {
   return serverMutation("/api/auth/register", newUser);
@@ -41,6 +43,7 @@ export const loginUser = async (
   const { accessToken, refreshToken } = result.data;
 
   await setAuthCookies(accessToken, refreshToken);
+  revalidatePath("/", "layout");
 
   const role = getUserRole2(accessToken);
 
@@ -54,3 +57,8 @@ export const loginUser = async (
 
   redirectByRole(role);
 };
+
+export async function logoutAction() {
+  await clearAuthCookies();
+  redirect("/auth/signin");
+}
