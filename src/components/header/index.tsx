@@ -38,16 +38,17 @@ export default function SiteHeader({
   // Demo state: connect this with your real authentication API.
   const router = useRouter();
   const isLoggedIn = Boolean(session);
-  const [role] = useState<Role>("customer");
+  const [role] = useState<Role>("CUSTOMER");
 
   const userName = session?.name ?? "Guest";
+
   const email = session?.email ?? "";
   const image = session?.image ?? "";
 
   const dashboardHref = {
-    customer: "/dashboard/customer",
-    technician: "/dashboard/technician",
-    admin: "/dashboard/admin",
+    CUSTOMER: "/dashboard/customer",
+    TECHNICIAN: "/dashboard/technician",
+    ADMIN: "/dashboard/admin",
   }[role];
 
   const navLinks = [
@@ -148,7 +149,7 @@ export default function SiteHeader({
                     Settings
                   </DropdownMenuItem>
 
-                  {role === "admin" && (
+                  {role === "ADMIN" && (
                     <DropdownMenuItem
                       onClick={() => router.push("/dashboard/admin/categories")}
                     >

@@ -28,10 +28,10 @@ export const getUserRole1 = (accessToken: string): string | null => {
     return null;
   }
 
-  return payload.role.toLowerCase();
+  return payload.role;
 };
 
-const ROLES: readonly Role[] = ["customer", "technician", "admin"];
+const ROLES: readonly Role[] = ["CUSTOMER", "TECHNICIAN", "ADMIN"];
 
 export const getUserRole2 = (token: string): Role | null => {
   try {
@@ -42,9 +42,7 @@ export const getUserRole2 = (token: string): Role | null => {
       return null;
     }
 
-    const normalizedRole = role.toLowerCase();
-
-    return ROLES.find((item) => item === normalizedRole) ?? null;
+    return ROLES.find((item) => item === role) ?? null;
   } catch {
     return null;
   }

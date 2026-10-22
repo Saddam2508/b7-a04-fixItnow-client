@@ -14,10 +14,11 @@ import { Label } from "@/components/ui/label";
 import { useActionState, useEffect } from "react";
 import { loginUser } from "@/lib/actions/user";
 import { toast } from "../ui/toast";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const [state, formAction, pending] = useActionState(loginUser, false);
-
+  const router = useRouter();
   useEffect(() => {
     if (!state) return;
     if (state.success) {
@@ -37,7 +38,9 @@ const LoginForm = () => {
           Enter your email below to login to your account
         </CardDescription>
         <CardAction>
-          <Button variant="link">Sign Up</Button>
+          <Button variant="link" onClick={() => router.push("/auth/register")}>
+            Sign Up
+          </Button>
         </CardAction>
       </CardHeader>
       <CardContent>

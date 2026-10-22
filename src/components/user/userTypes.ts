@@ -1,4 +1,4 @@
-export type Role = "admin" | "customer" | "technician";
+export type Role = "ADMIN" | "CUSTOMER" | "TECHNICIAN";
 
 export interface IUser {
   id?: string;
@@ -8,7 +8,7 @@ export interface IUser {
   mobile?: number;
   role?: Role;
   hourlyRate?: number;
-  image: string;
+  image?: string;
 }
 
 export type IUserSession = Omit<IUser, "password">;
