@@ -46,7 +46,6 @@ export const loginUser = async (
   revalidatePath("/", "layout");
 
   const role = getUserRole2(accessToken);
-  console.log(role);
   if (!role) {
     return {
       ...result,

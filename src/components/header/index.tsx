@@ -37,13 +37,13 @@ export default function SiteHeader({
 }) {
   // Demo state: connect this with your real authentication API.
   const router = useRouter();
+
   const isLoggedIn = Boolean(session);
-  const [role] = useState<Role>("CUSTOMER");
 
   const userName = session?.name ?? "Guest";
-
   const email = session?.email ?? "";
   const image = session?.image ?? "";
+  const role: Role = session?.role ?? "CUSTOMER";
 
   const dashboardHref = {
     CUSTOMER: "/dashboard/customer",

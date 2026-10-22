@@ -81,9 +81,9 @@ export async function DashboardSidebar() {
   ];
 
   const navLinksMap = {
-    customer: customerNavLinks,
-    technician: technicianNavLinks,
-    admin: adminNavLinks,
+    CUSTOMER: customerNavLinks,
+    TECHNICIAN: technicianNavLinks,
+    ADMIN: adminNavLinks,
   };
 
   const navItems =
