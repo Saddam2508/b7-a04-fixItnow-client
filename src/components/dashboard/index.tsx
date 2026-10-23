@@ -1,14 +1,25 @@
 import {
   Bell,
   Briefcase,
-  House,
-  Magnifier,
   Person,
   FileText,
   CreditCard,
 } from "@gravity-ui/icons";
 
-import { PanelLeft, Users } from "lucide-react";
+import {
+  House,
+  BriefcaseBusiness,
+  CalendarDays,
+  ClipboardList,
+  UserRound,
+  PanelLeft,
+  Users,
+  Star,
+  Search,
+  CalendarCheck,
+  Tags,
+} from "lucide-react";
+
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {
@@ -25,58 +36,86 @@ export async function DashboardSidebar() {
   const user = await getUserSession();
 
   const customerNavLinks: navLinks[] = [
-    { icon: House, href: "/dashboard/customer", label: "Dashboard" },
     {
-      icon: Bell,
-      href: "/dashboard/customer/tasks/post-tasks",
-      label: "Post a Task",
-    },
-    { icon: Briefcase, href: "/dashboard/customer/tasks", label: "My Tasks" },
-    {
-      icon: FileText,
-      href: "/dashboard/customer/proposals",
-      label: "Proposals",
-    },
-    { icon: Person, href: "/dashboard/customer/profile", label: "Profile" },
-  ];
-
-  const technicianNavLinks: navLinks[] = [
-    { icon: House, href: "/dashboard/technician", label: "Dashboard" },
-    {
-      icon: Magnifier,
-      href: "/dashboard/technician/browse-tasks",
-      label: "Browse Tasks",
+      icon: House,
+      href: "/dashboard/customer",
+      label: "Dashboard",
     },
     {
-      icon: FileText,
-      href: "/dashboard/technician/proposals",
-      label: "My Proposals",
+      icon: Search,
+      href: "/services",
+      label: "Browse Services",
     },
     {
-      icon: Briefcase,
-      href: "/dashboard/technician/projects",
-      label: "Active Projects",
+      icon: CalendarDays,
+      href: "/dashboard/customer/bookings",
+      label: "My Bookings",
     },
     {
       icon: CreditCard,
-      href: "/dashboard/technician/earnings",
-      label: "Earnings",
+      href: "/dashboard/customer/payments",
+      label: "Payment History",
     },
     {
-      icon: Person,
+      icon: Star,
+      href: "/dashboard/customer/reviews",
+      label: "My Reviews",
+    },
+    {
+      icon: UserRound,
+      href: "/dashboard/customer/profile",
+      label: "My Profile",
+    },
+  ];
+
+  const technicianNavLinks: navLinks[] = [
+    {
+      icon: House,
+      href: "/dashboard/technician",
+      label: "Dashboard",
+    },
+    {
+      icon: BriefcaseBusiness,
+      href: "/dashboard/technician/services",
+      label: "My Services",
+    },
+    {
+      icon: CalendarDays,
+      href: "/dashboard/technician/availability",
+      label: "Availability",
+    },
+    {
+      icon: ClipboardList,
+      href: "/dashboard/technician/bookings",
+      label: "Booking Requests",
+    },
+    {
+      icon: UserRound,
       href: "/dashboard/technician/profile",
-      label: "Edit Profile",
+      label: "My Profile",
     },
   ];
 
   const adminNavLinks: navLinks[] = [
-    { icon: House, href: "/dashboard/admin", label: "Dashboard" },
-    { icon: Users, href: "/dashboard/admin/users", label: "Manage Users" },
-    { icon: Briefcase, href: "/dashboard/admin/tasks", label: "Manage Tasks" },
     {
-      icon: CreditCard,
-      href: "/dashboard/admin/transactions",
-      label: "Transactions",
+      icon: House,
+      href: "/dashboard/admin",
+      label: "Dashboard",
+    },
+    {
+      icon: Users,
+      href: "/dashboard/admin/users",
+      label: "Manage Users",
+    },
+    {
+      icon: Tags,
+      href: "/dashboard/admin/categories",
+      label: "Manage Categories",
+    },
+    {
+      icon: CalendarCheck,
+      href: "/dashboard/admin/bookings",
+      label: "Manage Bookings",
     },
   ];
 
@@ -102,7 +141,7 @@ export async function DashboardSidebar() {
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
             href={item.href}
           >
-            <Icon className="size-5 text-muted" />
+            <Icon className="size-5 text-muted bg-black" />
             {item.label}
           </Link>
         );

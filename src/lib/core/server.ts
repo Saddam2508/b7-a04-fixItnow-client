@@ -5,6 +5,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 type Path = string;
 type Data = unknown;
+type Method = "POST" | "GET" | "PATCH" | "PUT" | "DELETE";
 
 export const authHeader = async (): Promise<Record<string, string>> => {
   const token = await getUserToken();
@@ -35,7 +36,7 @@ export const protectedFetch = async (path: Path) => {
 export const serverMutation = async (
   path: Path,
   data: Data,
-  method = "POST",
+  method: Method = "POST",
 ) => {
   const res = await fetch(`${baseUrl}${path}`, {
     method: method,
