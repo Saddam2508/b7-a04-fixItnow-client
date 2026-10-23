@@ -1,4 +1,4 @@
-import ServiceForm from "@/components/services/ServiceForm";
+import ServiceForm from "@/components/technician/services/ServiceForm";
 
 const ServicePage = () => {
   return (
