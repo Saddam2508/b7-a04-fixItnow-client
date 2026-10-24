@@ -1,7 +1,7 @@
 "use server";
 
 import { servicesApi } from "@/lib/api/services";
-import type { ServiceInput } from "@/components/services/serviceTypes";
+import type { ServiceInput } from "@/components/technician/services/serviceTypes";
 
 export async function getMyServicesAction() {
   return servicesApi.getMine();

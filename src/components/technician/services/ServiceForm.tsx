@@ -14,7 +14,7 @@ import type {
   Service,
   ServiceCategory,
   ServiceInput,
-} from "@/components/services/serviceTypes";
+} from "@/components/technician/services/serviceTypes";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,28 +40,40 @@ interface ServiceFormProps {
 }
 
 function extractCategories(result: unknown): ServiceCategory[] {
-  if (Array.isArray(result)) return result;
-
-  if (!result || typeof result !== "object") return [];
-
-  const response = result as {
-    data?: unknown;
-    categories?: unknown;
-  };
-
-  if (Array.isArray(response.data)) return response.data;
-  if (Array.isArray(response.categories)) {
-    return response.categories;
+  if (!result || typeof result !== "object") {
+    return [];
   }
 
-  if (
-    response.data &&
-    typeof response.data === "object" &&
-    "categories" in response.data
-  ) {
-    const categories = (response.data as { categories: unknown }).categories;
+  const response = result as Record<string, unknown>;
 
-    if (Array.isArray(categories)) return categories;
+  // API সরাসরি array দিলে
+  if (Array.isArray(result)) {
+    return result as ServiceCategory[];
+  }
+
+  const data = response.data;
+
+  // data সরাসরি array হলে
+  if (Array.isArray(data)) {
+    return data as ServiceCategory[];
+  }
+
+  // data object-এর ভেতরে category list খোঁজা
+  if (data && typeof data === "object") {
+    const nested = data as Record<string, unknown>;
+
+    for (const key of ["serviceCategories", "categories", "items"]) {
+      if (Array.isArray(nested[key])) {
+        return nested[key] as ServiceCategory[];
+      }
+    }
+  }
+
+  // response-এর root-এ category list থাকলে
+  for (const key of ["serviceCategories", "categories", "items"]) {
+    if (Array.isArray(response[key])) {
+      return response[key] as ServiceCategory[];
+    }
   }
 
   return [];
@@ -118,12 +130,11 @@ export default function ServiceForm({ serviceId }: ServiceFormProps) {
 
       try {
         const categoryResult = await getCategoriesAction();
-
         if (!active) return;
 
         const categoryData = extractCategories(categoryResult);
-        setCategories(categoryData);
 
+        setCategories(categoryData);
         if (serviceId) {
           const serviceResult = await getServiceByIdAction(serviceId);
 
@@ -291,8 +302,11 @@ export default function ServiceForm({ serviceId }: ServiceFormProps) {
                 }}
                 disabled={categories.length === 0}
               >
-                <SelectTrigger id="category">
-                  <SelectValue placeholder="Category নির্বাচন করুন" />
+                <SelectTrigger id="category" className="w-full">
+                  <span className="truncate text-left">
+                    {categories.find((category) => category.id === categoryId)
+                      ?.name ?? "Category নির্বাচন করুন"}
+                  </span>
                 </SelectTrigger>
 
                 <SelectContent>
