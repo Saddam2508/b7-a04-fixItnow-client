@@ -25,7 +25,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import {
   Card,
@@ -94,10 +93,18 @@ function extractService(result: unknown): Service {
     throw new Error(response.message || "Service লোড করা যায়নি।");
   }
 
-  const service =
-    response.data && typeof response.data === "object" ? response.data : result;
+  const data = response.data;
+
+  if (!data || typeof data !== "object") {
+    throw new Error("Service-এর তথ্য পাওয়া যায়নি।");
+  }
+
+  // data-এর ভিতরে service property আছে কি না
+  const service = "service" in data ? data.service : data;
 
   if (
+    !service ||
+    typeof service !== "object" ||
     !("title" in service) ||
     !("categoryId" in service) ||
     !("price" in service)
@@ -135,13 +142,13 @@ export default function ServiceForm({ serviceId }: ServiceFormProps) {
         const categoryData = extractCategories(categoryResult);
 
         setCategories(categoryData);
+
         if (serviceId) {
           const serviceResult = await getServiceByIdAction(serviceId);
-
+          console.log(serviceResult);
           if (!active) return;
 
           const service = extractService(serviceResult);
-
           setTitle(service.title);
           setDescription(service.description ?? "");
           setCategoryId(service.categoryId);
@@ -210,7 +217,6 @@ export default function ServiceForm({ serviceId }: ServiceFormProps) {
       const result = serviceId
         ? await updateServiceAction(serviceId, payload)
         : await createServiceAction(payload);
-
       if (
         result &&
         typeof result === "object" &&

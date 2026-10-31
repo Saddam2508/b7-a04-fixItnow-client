@@ -1,11 +1,11 @@
-import ServiceForm from "@/components/technician/services/ServiceForm";
+import MyServices from "@/components/technician/services/MyServices";
 
-const ServicePage = () => {
+const MyServicePage = () => {
   return (
     <div>
-      <ServiceForm />
+      <MyServices />
     </div>
   );
 };
 
-export default ServicePage;
+export default MyServicePage;

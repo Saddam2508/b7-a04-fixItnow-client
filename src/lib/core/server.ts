@@ -57,6 +57,7 @@ const handleStatusCode = async (res: Response) => {
   } else if (res.status === 403) {
     redirect("/forbidden");
   }
+
   const result = await res.json();
   return result;
 };
