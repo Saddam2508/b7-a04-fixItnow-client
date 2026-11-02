@@ -5,23 +5,48 @@ import {
   getTechnicianProfileAction,
   updateTechnicianProfileAction,
 } from "@/lib/actions/technician";
+
 import type {
-  TechnicianProfile,
+  TechnicianProfileFormData,
   TechnicianProfileInput,
 } from "@/components/technician/profile/profileTypes";
+
 import ProfileForm from "./ProfileForm";
 import { toast } from "@/components/ui/toast";
 import { Loader2, UserRound } from "lucide-react";
 
 const TechnicianProfile = () => {
-  const [profile, setProfile] = useState<TechnicianProfile | null>(null);
+  const [profile, setProfile] = useState<TechnicianProfileFormData | null>(
+    null,
+  );
+
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+
+  const loadProfile = async () => {
+    const result = await getTechnicianProfileAction();
+
+    if (!result?.success) {
+      throw new Error(result?.message || "Profile load failed");
+    }
+
+    const responseData = result.data as {
+      technicians?: TechnicianProfileFormData[];
+    };
+
+    const technician = responseData.technicians?.[0];
+
+    if (!technician) {
+      throw new Error("Technician profile not found");
+    }
+
+    setProfile(technician);
+  };
 
   useEffect(() => {
     let active = true;
 
-    const loadProfile = async () => {
+    const load = async () => {
       try {
         const result = await getTechnicianProfileAction();
 
@@ -30,7 +55,7 @@ const TechnicianProfile = () => {
         }
 
         const responseData = result.data as {
-          technicians?: TechnicianProfile[];
+          technicians?: TechnicianProfileFormData[];
         };
 
         const technician = responseData.technicians?.[0];
@@ -58,7 +83,7 @@ const TechnicianProfile = () => {
       }
     };
 
-    void loadProfile();
+    void load();
 
     return () => {
       active = false;
@@ -66,14 +91,7 @@ const TechnicianProfile = () => {
   }, []);
 
   const handleUpdate = async (formData: TechnicianProfileInput) => {
-    if (!profile) {
-      toast.add({
-        title: "Error",
-        description: "Profile update failed",
-        type: "error",
-      });
-      return;
-    }
+    if (!profile) return;
 
     setUpdating(true);
 
@@ -83,40 +101,14 @@ const TechnicianProfile = () => {
       if (!result?.success) {
         throw new Error(result?.message || "Profile update failed");
       }
-      if (result?.success) {
-        toast.add({
-          title: "Success",
-          description: result.message,
-          type: "success",
-        });
-      }
 
-      // Update-এর পরে latest profile fetch করো।
-      const updatedResult = await getTechnicianProfileAction();
+      await loadProfile();
 
-      if (!updatedResult?.success) {
-        throw new Error(updatedResult?.message || "Profile refresh failed");
-      }
-
-      const responseData = updatedResult.data as {
-        technicians?: TechnicianProfile[];
-      };
-
-      const updatedProfile = responseData.technicians?.[0];
-
-      if (!updatedProfile) {
-        throw new Error("Updated profile not found");
-      }
-
-      setProfile(updatedProfile);
-
-      if (result?.success) {
-        toast.add({
-          title: "Success",
-          description: result.message || "Profile updated successfully!",
-          type: "success",
-        });
-      }
+      toast.add({
+        title: "Success",
+        description: result.message || "Profile updated successfully!",
+        type: "success",
+      });
     } catch (error) {
       toast.add({
         title: "Error",
@@ -141,7 +133,9 @@ const TechnicianProfile = () => {
     return (
       <div className="rounded-xl border bg-card p-8 text-center">
         <UserRound className="mx-auto mb-3 h-10 w-10 text-muted-foreground" />
+
         <h2 className="text-lg font-semibold">Profile not found</h2>
+
         <p className="mt-2 text-sm text-muted-foreground">
           Unable to load your technician profile.
         </p>
@@ -153,6 +147,7 @@ const TechnicianProfile = () => {
     <div className="mx-auto w-full max-w-5xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">My Profile</h1>
+
         <p className="mt-1 text-sm text-muted-foreground">
           Manage your personal and professional information.
         </p>
