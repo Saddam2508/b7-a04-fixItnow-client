@@ -13,3 +13,7 @@ export async function updateTechnicianProfileAction(
 ) {
   return technicianApi.updateProfile(id, data);
 }
+
+export async function getTechnicianDashboardStatsAction() {
+  return technicianApi.getDashboardStats();
+}
