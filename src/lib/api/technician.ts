@@ -1,6 +1,6 @@
 import type { TechnicianProfileInput } from "@/components/technician/profile/profileTypes";
 
-import { protectedFetch, serverMutation } from "../core/server";
+import { protectedFetch, serverFetch, serverMutation } from "../core/server";
 
 export const technicianApi = {
   getProfile: () => protectedFetch("/api/technicians"),
@@ -9,4 +9,6 @@ export const technicianApi = {
 
   updateProfile: async (id: string, data: TechnicianProfileInput) =>
     serverMutation(`/api/technicians/${id}`, data, "PATCH"),
+
+  getAll: () => serverFetch("/api/technicians"),
 };
