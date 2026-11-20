@@ -7,6 +7,8 @@ import { getUserRole2 } from "../helper/jwt";
 import { redirectByRole } from "../helper/redirect";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { userApi } from "../api/user";
+import { CustomerProfileInput } from "@/components/customer/profile/customerProfileTypes";
 
 export const registerUser = async (newUser: IUser) => {
   return serverMutation("/api/auth/register", newUser);
@@ -60,4 +62,12 @@ export const loginUser = async (
 export async function logoutAction() {
   await clearAuthCookies();
   redirect("/auth/signin");
+}
+
+export async function getMyProfileAction() {
+  return userApi.getMyProfile();
+}
+
+export async function updateMyProfileAction(data: CustomerProfileInput) {
+  return userApi.updateMyProfile(data);
 }

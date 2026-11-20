@@ -1,10 +1,4 @@
-import {
-  Bell,
-  Briefcase,
-  Person,
-  FileText,
-  CreditCard,
-} from "@gravity-ui/icons";
+import { CreditCard } from "@gravity-ui/icons";
 
 import {
   House,

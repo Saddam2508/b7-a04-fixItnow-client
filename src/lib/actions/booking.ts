@@ -3,7 +3,7 @@
 import { bookingApi } from "@/lib/api/booking";
 import type { TUpdateBookingStatus } from "@/components/technician/bookings/booking";
 
-export async function getBookingsAction(technicianId: string) {
+export async function getBookingsAction(technicianId?: string) {
   return bookingApi.getAll(technicianId);
 }
 
@@ -16,4 +16,8 @@ export async function updateBookingStatusAction(
   data: TUpdateBookingStatus,
 ) {
   return bookingApi.updateStatus(id, data);
+}
+
+export async function cancelBookingAction(id: string) {
+  return bookingApi.cancel(id);
 }

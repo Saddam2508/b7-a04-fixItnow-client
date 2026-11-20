@@ -3,13 +3,17 @@ import type { TUpdateBookingStatus } from "@/components/technician/bookings/book
 import { protectedFetch, serverMutation } from "../core/server";
 
 export const bookingApi = {
-  getAll: (technicianId: string) =>
+  getAll: (technicianId?: string) =>
     protectedFetch(
-      `/api/bookings?technicianId=${encodeURIComponent(technicianId)}`,
+      technicianId
+        ? `/api/bookings?technicianId=${encodeURIComponent(technicianId)}`
+        : "/api/bookings",
     ),
 
   getById: (id: string) => protectedFetch(`/api/bookings/${id}`),
 
   updateStatus: (id: string, data: TUpdateBookingStatus) =>
     serverMutation(`/api/bookings/${id}/status`, data, "PATCH"),
+  cancel: (id: string) =>
+    serverMutation(`/api/bookings/${id}/cancel`, {}, "PATCH"),
 };

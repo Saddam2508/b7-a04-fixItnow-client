@@ -8,7 +8,7 @@ import {
 
 import { getTechnicianDashboardStatsAction } from "@/lib/actions/technician";
 
-import type { TechnicianDashboardStats } from "@/components/technician/bookings/booking";
+import type { TechnicianDashboardStats } from "@/components/technician/dashboard/dashboardTypes";
 
 const statsConfig = [
   {

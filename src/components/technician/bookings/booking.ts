@@ -38,6 +38,11 @@ export interface Booking {
   updatedAt: string;
   customer: BookingCustomer;
   service: BookingService;
+  review?: {
+    id: string;
+    rating: number;
+    comment: string | null;
+  } | null;
 }
 
 export interface BookingApiResponse<T> {
@@ -57,21 +62,4 @@ export interface SingleBookingResponse {
 
 export interface UpdatedBookingResponse {
   updatedBooking: Booking;
-}
-
-export interface TechnicianDashboardStats {
-  totalServices: number;
-  pendingRequests: number;
-  upcomingJobs: number;
-  completedJobs: number;
-  totalEarnings: number;
-}
-
-export interface TechnicianDashboardStatsResponse {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: {
-    stats: TechnicianDashboardStats;
-  };
 }
