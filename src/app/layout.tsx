@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toast";
 import SiteHeader from "@/components/header";
 import { getUserSession } from "@/lib/core/session";
 import { ReactNode } from "react";
+import Footer from "@/components/shared/footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -49,6 +50,7 @@ export default async function RootLayout({
         </header>
         <main>{children}</main>
         {/* <Footer></Footer> */}
+        <Footer/>
         <Toaster />
       </body>
     </html>
