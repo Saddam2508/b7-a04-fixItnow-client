@@ -17,6 +17,7 @@ import type {
   SingleBookingResponse,
   BookingStatus,
 } from "@/components/technician/bookings/booking";
+import PayNowButton from "@/components/customer/payments/PayNowButton";
 
 interface BookingDetailsPageProps {
   params: Promise<{
@@ -148,6 +149,35 @@ const BookingDetailsPage = async ({ params }: BookingDetailsPageProps) => {
                 ৳{booking.service.price.toLocaleString("en-BD")}
               </p>
             </div>
+            <div className="border-t pt-4">
+              <p className="text-gray-500">Payment Status</p>
+
+              <p
+                className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                  booking.payment?.status === "PAID"
+                    ? "bg-green-100 text-green-700"
+                    : booking.payment?.status === "FAILED"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-yellow-100 text-yellow-700"
+                }`}
+              >
+                {booking.payment?.status ?? "PENDING"}
+              </p>
+            </div>
+
+            {booking.status === "COMPLETED" && (
+              <div className="border-t pt-4">
+                <p className="mb-3 text-sm font-medium text-gray-700">
+                  Payment
+                </p>
+
+                <PayNowButton
+                  bookingId={booking.id}
+                  bookingStatus={booking.status}
+                  paymentStatus={booking.payment?.status ?? "PENDING"}
+                />
+              </div>
+            )}
           </section>
 
           {/* Schedule Information */}

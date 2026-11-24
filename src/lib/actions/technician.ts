@@ -17,3 +17,7 @@ export async function updateTechnicianProfileAction(
 export async function getTechnicianDashboardStatsAction() {
   return technicianApi.getDashboardStats();
 }
+
+export async function getPublicTechnicianAction(id: string) {
+  return technicianApi.getById(id);
+}

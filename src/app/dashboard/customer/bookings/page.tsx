@@ -10,6 +10,7 @@ import type {
   BookingStatus,
 } from "@/components/technician/bookings/booking";
 import CancelBookingButton from "@/components/customer/bookings/CancelBookingButton";
+import PayNowButton from "@/components/customer/payments/PayNowButton";
 
 const statusStyles: Record<BookingStatus, string> = {
   PENDING: "bg-yellow-100 text-yellow-700",
@@ -56,6 +57,7 @@ const CustomerBookingHistory = async () => {
 
   const bookings: Booking[] =
     response?.success && response.data?.bookings ? response.data.bookings : [];
+  console.log(bookings);
 
   return (
     <div className="space-y-6">
@@ -162,7 +164,32 @@ const BookingHistoryCard = ({ booking }: { booking: Booking }) => {
           </p>
         </div>
       </div>
+      {/* Payment Section */}
+      {booking.status === "COMPLETED" && (
+        <div className="mt-4 border-t pt-4">
+          <div className="mb-3">
+            <p className="text-xs text-gray-500">Payment Status</p>
 
+            <span
+              className={`mt-1 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                booking.payment?.status === "PAID"
+                  ? "bg-green-100 text-green-700"
+                  : booking.payment?.status === "FAILED"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-yellow-100 text-yellow-700"
+              }`}
+            >
+              {booking.payment?.status ?? "PENDING"}
+            </span>
+          </div>
+
+          <PayNowButton
+            bookingId={booking.id}
+            bookingStatus={booking.status}
+            paymentStatus={booking.payment?.status ?? "PENDING"}
+          />
+        </div>
+      )}
       {booking.service.description && (
         <p className="mt-4 border-t pt-4 text-sm text-gray-500">
           {booking.service.description}

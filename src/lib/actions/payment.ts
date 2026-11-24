@@ -9,3 +9,7 @@ export async function getPaymentsAction() {
 export async function createBookingCheckoutAction(bookingId: string) {
   return paymentApi.createCheckout(bookingId);
 }
+
+export async function verifyBookingCheckoutSessionAction(sessionId: string) {
+  return paymentApi.verifySession(sessionId);
+}

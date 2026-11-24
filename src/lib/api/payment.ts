@@ -8,4 +8,9 @@ export const paymentApi = {
       {},
       "POST",
     ),
+
+  verifySession: (sessionId: string) =>
+    protectedFetch(
+      `/api/payments/verify-session?session_id=${encodeURIComponent(sessionId)}`,
+    ),
 };

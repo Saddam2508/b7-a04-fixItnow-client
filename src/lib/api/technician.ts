@@ -11,4 +11,6 @@ export const technicianApi = {
     serverMutation(`/api/technicians/${id}`, data, "PATCH"),
 
   getAll: () => serverFetch("/api/technicians"),
+  getById: (id: string) =>
+    serverFetch(`/api/technicians/${encodeURIComponent(id)}`),
 };
